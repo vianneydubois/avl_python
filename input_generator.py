@@ -1,7 +1,7 @@
 from openmdao.utils.file_wrap import InputFileGenerator
 
 
-INPUT_TEMPLATE_FILE_NAME = "test.avl"
+INPUT_TEMPLATE_FILE_NAME = "geom_wing.avl"
 INPUT_GENERATED_FILE_NAME = "test_gen.avl"
 
 mach = 0.4
