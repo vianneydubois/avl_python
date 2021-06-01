@@ -1,9 +1,0 @@
-LOAD
-/Users/vianneydubois/Desktop/AVL_VLM/test_gen.avl
-OPER
-A C 0.4
-X
-ST
-/Users/vianneydubois/Desktop/AVL_VLM/test_out.txt
-
-QUIT

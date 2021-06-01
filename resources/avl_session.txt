@@ -1,0 +1,9 @@
+LOAD
+/Users/vianneydubois/PycharmProjects/avl_python/generated_files/generated_wing.avl
+OPER
+A C 0.3
+X
+ST
+/Users/vianneydubois/PycharmProjects/avl_python/generated_files/gen_wing_st.txt
+
+QUIT

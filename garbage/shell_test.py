@@ -1,8 +1,9 @@
+### NOT WORKING
 import os.path
 import subprocess as sp
 
 # AVL_FOLDER_PATH = '~/Desktop/AVL_VLM'
-AVL_FOLDER_PATH = '.'
+AVL_FOLDER_PATH = '..'
 AVL_EXE_NAME = 'avl335'
 avl_path = os.path.join(AVL_FOLDER_PATH, AVL_EXE_NAME)
 
