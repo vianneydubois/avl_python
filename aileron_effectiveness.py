@@ -3,7 +3,7 @@ import subprocess as sp
 from openmdao.utils.file_wrap import InputFileGenerator, FileParser
 
 
-def generate_geometry(input_template_path: str, input_generated_path: str):
+def generate_geometry(input_template_path: str, input_generated_path: str, aileron_x_c: float):
     mach = 0.4
     sref = 28
     bref = 14
@@ -17,12 +17,12 @@ def generate_geometry(input_template_path: str, input_generated_path: str):
     xle1 = 0
     yle1 = 4
     c1 = 2
-    c_a1 = 0.75  # chordwise position of aileron hinge
+    c_a1 = aileron_x_c  # chordwise position of aileron hinge
     # section 2
     xle2 = 0
     yle2 = 7
     c2 = 2
-    c_a2 = 0.75  # chordwise position of aileron hinge
+    c_a2 = aileron_x_c  # chordwise position of aileron hinge
 
     parser = InputFileGenerator()
     parser.set_template_file(input_template_path)

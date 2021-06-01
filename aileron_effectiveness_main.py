@@ -1,5 +1,6 @@
 import os
 import aileron_effectiveness as ae
+import numpy as np
 
 INPUT_TEMPLATE_FOLDER = "resources"
 INPUT_TEMPLATE_FILE_NAME = "geom_wing.avl"
@@ -20,10 +21,14 @@ avl_path = os.path.join(AVL_FOLDER, AVL_EXE_NAME)
 avl_session_path = os.path.join(AVL_SESSION_FOLDER, AVL_SESSION_FILE)
 
 
-ae.generate_geometry(input_template_path, input_generated_path)
+aileron_x_c_range = np.arange(0.6, 0.9, 0.05)
+aileron_effect_list = []
 
-ae.run_avl_solver(avl_path, avl_session_path)
+for aileron_x_c in aileron_x_c_range:
+    ae.generate_geometry(input_template_path, input_generated_path, aileron_x_c)
+    ae.run_avl_solver(avl_path, avl_session_path)
+    aileron_effect_list += ae.read_output(avl_session_path)
 
-derivative_list = ae.read_output(avl_session_path)
-
-print(f"\nCld1 = {derivative_list[0]*180/3.14:.3f}")
+print("\n ##### RESULTS #####")
+print(aileron_x_c_range)
+print(aileron_effect_list)
