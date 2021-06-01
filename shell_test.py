@@ -2,11 +2,11 @@ import os.path
 import subprocess as sp
 
 # AVL_FOLDER_PATH = '~/Desktop/AVL_VLM'
-AVL_FOLDER_PATH = ''
+AVL_FOLDER_PATH = '.'
 AVL_EXE_NAME = 'avl335'
 avl_path = os.path.join(AVL_FOLDER_PATH, AVL_EXE_NAME)
 
-avl_ps = sp.Popen(['open', avl_path], stdin=sp.PIPE, stdout=None, stderr=None)
+avl_ps = sp.Popen([avl_path], stdin=sp.PIPE, stdout=None, stderr=None)
 
 
 def avl_command(cmd):
