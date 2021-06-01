@@ -24,10 +24,12 @@ command_list = [load,
 command_string = '\n'.join(command_list)
 command_string = command_string.encode('ascii')
 
-# AVL_FOLDER_PATH = '~/Desktop/AVL_VLM'
-AVL_FOLDER_PATH = '.'
+AVL_FOLDER_PATH = os.path.expanduser('~/Desktop/AVL_VLM')
 AVL_EXE_NAME = 'avl335'
 avl_path = os.path.join(AVL_FOLDER_PATH, AVL_EXE_NAME)
+
+if os.path.exists(output_st):
+    os.remove(output_st)
 
 avl_ps = sp.Popen([avl_path], stdin=sp.PIPE, stdout=None, stderr=None)
 avl_ps.communicate(input=command_string)
