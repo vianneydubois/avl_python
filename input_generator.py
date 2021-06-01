@@ -1,5 +1,4 @@
 # Generates a geometry input file for AVL
-
 from openmdao.utils.file_wrap import InputFileGenerator
 import os.path
 
