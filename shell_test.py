@@ -15,4 +15,13 @@ def avl_command(cmd):
     avl_ps.stdin.write(cmd)
 
 
-avl_command('LOAD /Users/vianneydubois/Desktop/AVL_VLM/test_gen.avl')
+avl_command('LOAD')
+avl_command('/Users/vianneydubois/Desktop/AVL_VLM/test_gen.avl')
+avl_command('OPER')
+avl_command('A C 0.4')
+avl_command('X')
+avl_command('ST')
+avl_command('/Users/vianneydubois/Desktop/AVL_VLM/test_out.txt')
+avl_command('')
+avl_command('QUIT')
+avl_ps.stdin.flush()
