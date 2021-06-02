@@ -73,8 +73,7 @@ def run_avl_solver(avl_path: str, avl_session_path: str, avl_stability_path: str
         lines = avl_session.readlines()
         for line in lines:
             command_string += line
-        # saving the output file path
-        output_stab_path = lines[12][:-1]  # removing the '\n' character
+
     command_string = command_string.encode('ascii')
 
     # if the output file already exists, it will make the execution crash since AVL will ask if the
