@@ -5,7 +5,7 @@ from openmdao.utils.file_wrap import InputFileGenerator, FileParser
 
 
 def generate_geometry(input_template_path: str, input_generated_path: str, aileron_x_c: float):
-    mach = 0.4
+    mach = 0.78
     sref = 122.4
     bref = 34.1
     cref = 4.2
@@ -66,7 +66,7 @@ def generate_geometry(input_template_path: str, input_generated_path: str, ailer
     parser.generate()
 
 
-def run_avl_solver(avl_path: str, avl_session_path: str):
+def run_avl_solver(avl_path: str, avl_session_path: str, avl_stability_path: str):
     # Creating a string containing all the commands
     command_string = ""
     with open(avl_session_path, 'r') as avl_session:
@@ -74,25 +74,25 @@ def run_avl_solver(avl_path: str, avl_session_path: str):
         for line in lines:
             command_string += line
         # saving the output file path
-        output_stab_path = lines[6][:-1]  # removing the '\n' character
+        output_stab_path = lines[12][:-1]  # removing the '\n' character
     command_string = command_string.encode('ascii')
 
     # if the output file already exists, it will make the execution crash since AVL will ask if the
     # file must be overwritten or not, and it will desynchronize the program
-    if os.path.exists(output_stab_path):
-        os.remove(output_stab_path)
+    if os.path.exists(avl_stability_path):
+        os.remove(avl_stability_path)
 
     avl_ps = sp.Popen([avl_path], stdin=sp.PIPE, stdout=None, stderr=None)
     avl_ps.communicate(input=command_string)  # sending the commands to AVL
 
 
-def read_output(avl_session_path: str) -> list:
+def read_output(avl_stability_path: str) -> list:
     # reading the output file path from the avl_session file
-    with open(avl_session_path, 'r') as avl_session:
-        output_stab_path = avl_session.readlines()[6][:-1]  # removing the '\n' character
+    #with open(avl_session_path, 'r') as avl_session:
+     #   output_stab_path = avl_session.readlines()[6][:-1]  # removing the '\n' character
 
     parser = FileParser()
-    parser.set_file(output_stab_path)
+    parser.set_file(avl_stability_path)
     derivative_list = []
 
     parser.mark_anchor('Cld1')
@@ -105,12 +105,13 @@ def compute_aileron(avl_path: str,
                     avl_session_path: str,
                     input_template_path: str,
                     input_generated_path: str,
+                    avl_stability_path: str,
                     aileron_x_c_range: list) -> list:
 
     aileron_effectiveness_list = []
     for aileron_x_c in aileron_x_c_range:
         generate_geometry(input_template_path, input_generated_path, aileron_x_c)
-        run_avl_solver(avl_path, avl_session_path)
-        aileron_effectiveness_list.append(read_output(avl_session_path)[0])
+        run_avl_solver(avl_path, avl_session_path, avl_stability_path)
+        aileron_effectiveness_list.append(read_output(avl_stability_path)[0])
 
     return aileron_effectiveness_list
