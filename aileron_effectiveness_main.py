@@ -21,14 +21,20 @@ avl_path = os.path.join(AVL_FOLDER, AVL_EXE_NAME)
 avl_session_path = os.path.join(AVL_SESSION_FOLDER, AVL_SESSION_FILE)
 
 
-aileron_x_c_range = np.arange(0.6, 0.9, 0.05)
-aileron_effect_list = []
+aileron_x_c_range = [0.75]
 
-for aileron_x_c in aileron_x_c_range:
-    ae.generate_geometry(input_template_path, input_generated_path, aileron_x_c)
-    ae.run_avl_solver(avl_path, avl_session_path)
-    aileron_effect_list += ae.read_output(avl_session_path)
+#aileron_effect_list = []
+#for aileron_x_c in aileron_x_c_range:
+#    ae.generate_geometry(input_template_path, input_generated_path, aileron_x_c)
+#    ae.run_avl_solver(avl_path, avl_session_path)
+#    aileron_effect_list.append(ae.read_output(avl_session_path)[0]*180/np.pi)
+
+aileron_effect_list = ae.compute_aileron(avl_path,
+                                         avl_session_path,
+                                         input_template_path,
+                                         input_generated_path,
+                                         aileron_x_c_range)
 
 print("\n ##### RESULTS #####")
 print(aileron_x_c_range)
-print(aileron_effect_list)
+print(np.array(aileron_effect_list)*180/np.pi)

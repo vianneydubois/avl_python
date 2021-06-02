@@ -36,21 +36,21 @@ TRANSLATE
 SECTION
 #Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
  0.0    0.0    0.0     0.0  0.0  
-NACA
-2412
+AFILE
+/Users/vianneydubois/PycharmProjects/avl_python/resources/F15-15-mod.dat
 
 SECTION
 #Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
 0.0   0.0   0.0      0.0    0.0   
-NACA
-2412
+AFILE
+/Users/vianneydubois/PycharmProjects/avl_python/resources/F15-15-mod.dat
 CONTROL
 aileron -1.0  0.0  0. 0. 0.  -1
 
 SECTION
 #Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
 0.0    0.0    0.0     0.0    0.0  
-NACA
-2412
+AFILE
+/Users/vianneydubois/PycharmProjects/avl_python/resources/F15-11-mod.dat
 CONTROL
 aileron -1.0  0.0  0. 0. 0.  -1
