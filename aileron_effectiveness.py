@@ -24,8 +24,7 @@ def generate_geometry(input_template_path: str, input_generated_path: str, ailer
     # section 1
     yle1 = 0.8*bref/2
     xle1 = yle1 * np.tan(sweep_0)
-    sweep_100 = np.arctan( (xle1 + c0 - c2)/yle1 )
-    c1 = c0 + yle1*(np.tan(sweep_100)-np.tan(sweep_0))
+    c1 = c0 + 0.8 * (c2 - c0)
     c_a1 = aileron_x_c  # chordwise position of aileron hinge
 
 
