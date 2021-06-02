@@ -24,7 +24,7 @@ avl_path = os.path.join(AVL_FOLDER, AVL_EXE_NAME)
 avl_session_path = os.path.join(AVL_SESSION_FOLDER, AVL_SESSION_FILE)
 avl_stability_path = os.path.join(AVL_STABILITY_FOLDER, AVL_STABILITY_FILE_NAME)
 
-aileron_x_c_range = [0.70, 0.75, 0.80]
+aileron_x_c_range = np.arange(0.55, 0.85, 0.05)
 
 aileron_effect_list = ae.compute_aileron(avl_path,
                                          avl_session_path,
