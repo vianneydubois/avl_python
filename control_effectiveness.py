@@ -174,10 +174,26 @@ def compute_range(avl_path: str,
                   elevator_range: list,
                   rudder_range: list) -> list:
 
-    aileron_effectiveness_list = []
-    for aileron_x_c in aileron_x_c_range:
-        generate_geometry(input_template_path, input_generated_path, aileron_x_c)
-        run_avl_solver(avl_path, avl_session_path, avl_stability_path)
-        aileron_effectiveness_list.append(read_output(avl_stability_path)[0])
+    # number of AVL run to perform
+    n_aileron = len(aileron_range)
+    n_elevator = len(elevator_range)
+    n_rudder = len(rudder_range)
+    run_number = max(n_aileron, n_elevator, n_rudder)
 
-    return aileron_effectiveness_list
+    # completing the FCS dimensions lists so that they have the same length
+    for list in [aileron_range, elevator_range, rudder_range]:
+        n = len(list)
+        if n < run_number:
+            list += [list[-1]] * (run_number - n)
+
+
+    control_derivatives = np.zeros((6, run_number))
+    control_derivatives[::2] = aileron_range, elevator_range, rudder_range
+
+    for i in range(run_number):
+        generate_geometry(input_template_path, input_generated_path,
+                          aileron_range[i], elevator_range[i], rudder_range[i])
+        run_avl_solver(avl_path, avl_session_path, avl_stability_path)
+        control_derivatives[1::2, i] =  read_output(avl_stability_path)
+
+    return control_derivatives
