@@ -9,9 +9,9 @@ def generate_geometry(input_template_path: str, input_generated_path: str, ailer
     sref = 122.4
     bref = 34.1
     cref = 4.2
-
     sweep_0 = 0.472709635153824
 
+    ## WING
     # section 0
     xle0 = 0
     yle0 = 0
@@ -26,6 +26,34 @@ def generate_geometry(input_template_path: str, input_generated_path: str, ailer
     xle1 = yle1 * np.tan(sweep_0)
     c1 = c0 + 0.8 * (c2 - c0)
     c_a1 = aileron_x_c  # chordwise position of aileron hinge
+
+    ## HORIZONTAL TAIL
+    x_translate_ht = 19.341
+    z_translate_ht = 2
+    # section 0
+    ht_xle0 = 0
+    ht_yle0 = 0
+    ht_c0 = 4.19446
+    c_e0 = 0.75  # chordwise position of elevator hinge
+    # section 1
+    ht_xle1 = 3.8419
+    ht_yle1 = 5.84509
+    ht_c1 = 1.25834
+    c_e1 = 0.75  # chordwise position of elevator hinge
+
+    ## VERTICAL TAIL
+    x_translate_vt = 17.137
+    z_translate_vt = 2.749
+    # section 0
+    vt_xle0 = 0
+    vt_zle0 = 0
+    vt_c0 = 5.90875
+    c_r0 = 0.75  # chordwise position of rudder hinge
+    # section 1
+    vt_xle1 = 5.724
+    vt_zle1 = 6.70056
+    vt_c1 = 1.77262
+    c_r1 = 0.75  # chordwise position of rudder hinge
 
 
     parser = InputFileGenerator()
@@ -42,11 +70,10 @@ def generate_geometry(input_template_path: str, input_generated_path: str, ailer
     parser.transfer_var(float(bref), 1, 3)
     parser.reset_anchor()
 
-    # wing
+    # WING
     # section 0
     parser.mark_anchor("#Xle")
     parser.transfer_var(float(c0), 1, 4)
-
     # section 1
     parser.mark_anchor("#Xle")
     parser.transfer_var(float(xle1), 1, 1)
@@ -54,7 +81,6 @@ def generate_geometry(input_template_path: str, input_generated_path: str, ailer
     parser.transfer_var(float(c1), 1, 4)
     parser.mark_anchor("CONTROL")
     parser.transfer_var(float(c_a1), 1, 3)
-
     # section 2
     parser.mark_anchor("#Xle")
     parser.transfer_var(float(xle2), 1, 1)
@@ -62,6 +88,44 @@ def generate_geometry(input_template_path: str, input_generated_path: str, ailer
     parser.transfer_var(float(c2), 1, 4)
     parser.mark_anchor("CONTROL")
     parser.transfer_var(float(c_a2), 1, 3)
+
+    # HORIZONTAL TAIL
+    parser.reset_anchor()
+    parser.mark_anchor('Stab')
+    parser.mark_anchor('TRANSLATE')
+    parser.transfer_var(float(x_translate_ht), 1, 1)
+    parser.transfer_var(float(z_translate_ht), 1, 3)
+    # section 0
+    parser.mark_anchor("#Xle")
+    parser.transfer_var(float(ht_c0), 1, 4)
+    parser.mark_anchor("CONTROL")
+    parser.transfer_var(float(c_e0), 1, 3)
+    # section 1
+    parser.mark_anchor("#Xle")
+    parser.transfer_var(float(ht_xle1), 1, 1)
+    parser.transfer_var(float(ht_yle1), 1, 2)
+    parser.transfer_var(float(ht_c1), 1, 4)
+    parser.mark_anchor("CONTROL")
+    parser.transfer_var(float(c_e1), 1, 3)
+
+    # VERTICAL TAIL
+    parser.reset_anchor()
+    parser.mark_anchor('Fin')
+    parser.mark_anchor('TRANSLATE')
+    parser.transfer_var(float(x_translate_vt), 1, 1)
+    parser.transfer_var(float(z_translate_vt), 1, 3)
+    # section 0
+    parser.mark_anchor("#Xle")
+    parser.transfer_var(float(vt_c0), 1, 4)
+    parser.mark_anchor("CONTROL")
+    parser.transfer_var(float(c_r0), 1, 3)
+    # section 1
+    parser.mark_anchor("#Xle")
+    parser.transfer_var(float(vt_xle1), 1, 1)
+    parser.transfer_var(float(vt_zle1), 1, 3)
+    parser.transfer_var(float(vt_c1), 1, 4)
+    parser.mark_anchor("CONTROL")
+    parser.transfer_var(float(c_r1), 1, 3)
 
     parser.generate()
 

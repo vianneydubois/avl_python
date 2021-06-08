@@ -43,7 +43,7 @@ SECTION
 #Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
 0.0   0.0   0.0      0.0    0.0   
 AFILE
-/Users/vianneydubois/PycharmProjects/avl_python/resources/F15-15-mod.dat
+/Users/vianneydubois/PycharmProjects/avl_python/resources/F15-12-mod.dat
 CONTROL
 aileron -1.0  0.0  0. 0. 0.  -1
 
