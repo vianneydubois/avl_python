@@ -125,7 +125,7 @@ def generate_geometry(input_template_path: str, input_generated_path: str,
     parser.generate()
 
 
-def run_avl_solver(avl_path: str, avl_session_path: str, avl_stability_path: str):
+def run_avl(avl_path: str, avl_session_path: str, avl_stability_path: str):
     # Creating a string containing all the commands
     command_string = ""
     with open(avl_session_path, 'r') as avl_session:
@@ -193,7 +193,7 @@ def compute_range(avl_path: str,
     for i in range(run_number):
         generate_geometry(input_template_path, input_generated_path,
                           aileron_range[i], elevator_range[i], rudder_range[i])
-        run_avl_solver(avl_path, avl_session_path, avl_stability_path)
+        run_avl(avl_path, avl_session_path, avl_stability_path)
         control_derivatives[1::2, i] =  read_output(avl_stability_path)
 
     return control_derivatives
