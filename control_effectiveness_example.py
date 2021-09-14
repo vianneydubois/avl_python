@@ -23,6 +23,7 @@ avl_path = os.path.join(AVL_FOLDER, AVL_EXE_NAME)
 avl_session_path = os.path.join(AVL_SESSION_FOLDER, AVL_SESSION_FILE)
 avl_stability_path = os.path.join(AVL_STABILITY_FOLDER, AVL_STABILITY_FILE_NAME)
 
+# hinge chordwise position ranges
 aileron_range = [.7, .75, .8]
 elevator_range = [.7, .8]
 rudder_range = [.5, .55, .6]
@@ -35,5 +36,7 @@ res = ce.compute_range(avl_path,
                  aileron_range,
                  elevator_range,
                  rudder_range)
-print("\n#####  Control derivatives  ##### [rad^-1]")
+
+print("\n\n#####  Control derivatives  ##### [rad^-1]")
+print("##  Lines 1 & 2 : ailerons, 3 & 4 : elevator, 5 & 6 : rudder ##\n")
 print(res)
