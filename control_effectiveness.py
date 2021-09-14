@@ -4,7 +4,8 @@ import numpy as np
 from openmdao.utils.file_wrap import InputFileGenerator, FileParser
 
 
-def generate_geometry(input_template_path: str, input_generated_path: str, aileron_x_c: float):
+def generate_geometry(input_template_path: str, input_generated_path: str,
+                      aileron_x_c: float, elevator_x_c: float, rudder_x_c: float):
     mach = 0.78
     sref = 122.4
     bref = 34.1
@@ -20,12 +21,10 @@ def generate_geometry(input_template_path: str, input_generated_path: str, ailer
     yle2 = bref/2
     xle2 = yle2 * np.tan(sweep_0)
     c2 = 1.6599009162290415
-    c_a2 = aileron_x_c  # chordwise position of aileron hinge
     # section 1
     yle1 = 0.8*bref/2
     xle1 = yle1 * np.tan(sweep_0)
     c1 = c0 + 0.8 * (c2 - c0)
-    c_a1 = aileron_x_c  # chordwise position of aileron hinge
 
     ## HORIZONTAL TAIL
     x_translate_ht = 19.341
@@ -34,12 +33,10 @@ def generate_geometry(input_template_path: str, input_generated_path: str, ailer
     ht_xle0 = 0
     ht_yle0 = 0
     ht_c0 = 4.19446
-    c_e0 = 0.75  # chordwise position of elevator hinge
     # section 1
     ht_xle1 = 3.8419
     ht_yle1 = 5.84509
     ht_c1 = 1.25834
-    c_e1 = 0.75  # chordwise position of elevator hinge
 
     ## VERTICAL TAIL
     x_translate_vt = 17.137
@@ -48,12 +45,10 @@ def generate_geometry(input_template_path: str, input_generated_path: str, ailer
     vt_xle0 = 0
     vt_zle0 = 0
     vt_c0 = 5.90875
-    c_r0 = 0.75  # chordwise position of rudder hinge
     # section 1
     vt_xle1 = 5.724
     vt_zle1 = 6.70056
     vt_c1 = 1.77262
-    c_r1 = 0.75  # chordwise position of rudder hinge
 
 
     parser = InputFileGenerator()
@@ -80,14 +75,14 @@ def generate_geometry(input_template_path: str, input_generated_path: str, ailer
     parser.transfer_var(float(yle1), 1, 2)
     parser.transfer_var(float(c1), 1, 4)
     parser.mark_anchor("CONTROL")
-    parser.transfer_var(float(c_a1), 1, 3)
+    parser.transfer_var(float(aileron_x_c), 1, 3)
     # section 2
     parser.mark_anchor("#Xle")
     parser.transfer_var(float(xle2), 1, 1)
     parser.transfer_var(float(yle2), 1, 2)
     parser.transfer_var(float(c2), 1, 4)
     parser.mark_anchor("CONTROL")
-    parser.transfer_var(float(c_a2), 1, 3)
+    parser.transfer_var(float(aileron_x_c), 1, 3)
 
     # HORIZONTAL TAIL
     parser.reset_anchor()
@@ -99,14 +94,14 @@ def generate_geometry(input_template_path: str, input_generated_path: str, ailer
     parser.mark_anchor("#Xle")
     parser.transfer_var(float(ht_c0), 1, 4)
     parser.mark_anchor("CONTROL")
-    parser.transfer_var(float(c_e0), 1, 3)
+    parser.transfer_var(float(elevator_x_c), 1, 3)
     # section 1
     parser.mark_anchor("#Xle")
     parser.transfer_var(float(ht_xle1), 1, 1)
     parser.transfer_var(float(ht_yle1), 1, 2)
     parser.transfer_var(float(ht_c1), 1, 4)
     parser.mark_anchor("CONTROL")
-    parser.transfer_var(float(c_e1), 1, 3)
+    parser.transfer_var(float(elevator_x_c), 1, 3)
 
     # VERTICAL TAIL
     parser.reset_anchor()
@@ -118,19 +113,19 @@ def generate_geometry(input_template_path: str, input_generated_path: str, ailer
     parser.mark_anchor("#Xle")
     parser.transfer_var(float(vt_c0), 1, 4)
     parser.mark_anchor("CONTROL")
-    parser.transfer_var(float(c_r0), 1, 3)
+    parser.transfer_var(float(rudder_x_c), 1, 3)
     # section 1
     parser.mark_anchor("#Xle")
     parser.transfer_var(float(vt_xle1), 1, 1)
     parser.transfer_var(float(vt_zle1), 1, 3)
     parser.transfer_var(float(vt_c1), 1, 4)
     parser.mark_anchor("CONTROL")
-    parser.transfer_var(float(c_r1), 1, 3)
+    parser.transfer_var(float(rudder_x_c), 1, 3)
 
     parser.generate()
 
 
-def run_avl_solver(avl_path: str, avl_session_path: str, avl_stability_path: str):
+def run_avl(avl_path: str, avl_session_path: str, avl_stability_path: str):
     # Creating a string containing all the commands
     command_string = ""
     with open(avl_session_path, 'r') as avl_session:
@@ -160,21 +155,45 @@ def read_output(avl_stability_path: str) -> list:
 
     parser.mark_anchor('Cld1')
     derivative_list.append(parser.transfer_var(0, 6))
+    parser.reset_anchor()
+    parser.mark_anchor('Cmd2')
+    derivative_list.append(parser.transfer_var(0, 10))
+    parser.reset_anchor()
+    parser.mark_anchor('Cnd3')
+    derivative_list.append(parser.transfer_var(0, 12))
 
     return derivative_list
 
 
-def compute_aileron(avl_path: str,
-                    avl_session_path: str,
-                    input_template_path: str,
-                    input_generated_path: str,
-                    avl_stability_path: str,
-                    aileron_x_c_range: list) -> list:
+def compute_range(avl_path: str,
+                  avl_session_path: str,
+                  input_template_path: str,
+                  input_generated_path: str,
+                  avl_stability_path: str,
+                  aileron_range: list,
+                  elevator_range: list,
+                  rudder_range: list) -> list:
 
-    aileron_effectiveness_list = []
-    for aileron_x_c in aileron_x_c_range:
-        generate_geometry(input_template_path, input_generated_path, aileron_x_c)
-        run_avl_solver(avl_path, avl_session_path, avl_stability_path)
-        aileron_effectiveness_list.append(read_output(avl_stability_path)[0])
+    # number of AVL run to perform
+    n_aileron = len(aileron_range)
+    n_elevator = len(elevator_range)
+    n_rudder = len(rudder_range)
+    run_number = max(n_aileron, n_elevator, n_rudder)
 
-    return aileron_effectiveness_list
+    # completing the FCS dimensions lists so that they have the same length
+    for list in [aileron_range, elevator_range, rudder_range]:
+        n = len(list)
+        if n < run_number:
+            list += [list[-1]] * (run_number - n)
+
+
+    control_derivatives = np.zeros((6, run_number))
+    control_derivatives[::2] = aileron_range, elevator_range, rudder_range
+
+    for i in range(run_number):
+        generate_geometry(input_template_path, input_generated_path,
+                          aileron_range[i], elevator_range[i], rudder_range[i])
+        run_avl(avl_path, avl_session_path, avl_stability_path)
+        control_derivatives[1::2, i] =  read_output(avl_stability_path)
+
+    return control_derivatives
